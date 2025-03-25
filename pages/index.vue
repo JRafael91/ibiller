@@ -4,7 +4,7 @@
       <UiCard title="Cotización" description="Datos de cotización">
         <template #content>
           <UiCardContent>
-            <Quotation/>
+            <UiQuotation/>
           </UiCardContent>
         </template>
       </UiCard>
