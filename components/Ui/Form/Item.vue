@@ -10,9 +10,9 @@
       <UiFormDescription v-if="description" :description="description" />
     </slot>
     <slot name="errorMessage">
-      <TransitionSlide tag="p">
-        <UiFormMessage v-if="!hideMessage" />
-      </TransitionSlide>
+      <UiFormMessage v-if="!hideMessage" />
+      <!-- <TransitionSlide tag="p">
+      </TransitionSlide> -->
     </slot>
   </div>
 </template>
