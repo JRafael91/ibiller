@@ -7,7 +7,7 @@
   "singleQuote": false,
   "tabWidth": 2,
   "trailingComma": "es5",
-  "useTabs": false,
+  "useTabs": true,
   "vueIndentScriptAndStyle": true,
   "tailwindFunctions": ["tv"],
   "importOrder": ["<BUILTIN_MODULES>", "<THIRD_PARTY_MODULES>", "<TYPES>", "", "^[.]"]

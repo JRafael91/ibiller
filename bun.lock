@@ -24,6 +24,7 @@
         "vue": "^3.5.13",
         "vue-currency-input": "^3.2.1",
         "vue-router": "^4.5.0",
+        "vue-sonner": "^1.3.0",
         "zod": "^3.24.2",
       },
       "devDependencies": {
@@ -1820,6 +1821,8 @@
     "vue-router": ["vue-router@4.5.0", "", { "dependencies": { "@vue/devtools-api": "^6.6.4" }, "peerDependencies": { "vue": "^3.2.0" } }, "sha512-HDuk+PuH5monfNuY+ct49mNmkCRK4xJAV9Ts4z9UFc4rzdDnxQLyCMGGc8pKhZhHTVzfanpNwB/lwqevcBwI4w=="],
 
     "vue-screen-utils": ["vue-screen-utils@1.0.0-beta.13", "", { "peerDependencies": { "vue": "^3.2.0" } }, "sha512-EJ/8TANKhFj+LefDuOvZykwMr3rrLFPLNb++lNBqPOpVigT2ActRg6icH9RFQVm4nHwlHIHSGm5OY/Clar9yIg=="],
+
+    "vue-sonner": ["vue-sonner@1.3.0", "", {}, "sha512-jAodBy4Mri8rQjVZGQAPs4ZYymc1ywPiwfa81qU0fFl+Suk7U8NaOxIDdI1oBGLeQJqRZi/oxNIuhCLqsBmOwg=="],
 
     "webidl-conversions": ["webidl-conversions@3.0.1", "", {}, "sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ=="],
 
