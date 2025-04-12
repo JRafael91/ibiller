@@ -13,7 +13,9 @@ export default defineNuxtConfig({
     "@nuxtjs/color-mode",
     "@vueuse/nuxt",
     "@vee-validate/nuxt",
-    "@samk-dev/nuxt-vcalendar"
+    "@samk-dev/nuxt-vcalendar",
+    "nuxt-auth-utils",
+    "nuxt-security"
   ],
 
   tailwindcss: {
