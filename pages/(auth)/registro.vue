@@ -42,20 +42,19 @@
 
 	const submit = handleSubmit(async () => {
 		await execute();
-		if (status.value === "success") {
-			useSonner.success("Cuenta creada!", {
-				description: "Se ha creado correctamente tu cuenta.",
-			});
-
-			navigateTo("/login", {
-				replace: true,
-			});
-		}
 		if (status.value === "error") {
 			useSonner.error("Ocurrió un error", {
 				description: error.value?.statusMessage,
 			});
+			return;
 		}
+		useSonner.success("Cuenta creada!", {
+			description: "Se ha creado correctamente tu cuenta.",
+		});
+
+		navigateTo("/acceso", {
+			replace: true,
+		});
 	});
 </script>
 <template>
@@ -139,7 +138,7 @@
 					¿Ya tienes una cuenta?
 					<NuxtLink
 						class="font-semibold text-primary underline-offset-2 hover:underline"
-						to="/login"
+						to="/acceso"
 					>
 						Acceder
 					</NuxtLink>
