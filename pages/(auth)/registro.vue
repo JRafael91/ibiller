@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+	import { authClient } from "~/lib/auth-client";
 	import { signupSchemaZod } from "~/shared/utils/signup-schema.zod";
 
 	definePageMeta({
@@ -33,28 +34,54 @@
 		}
 	);
 
-	const { data, status, error, execute } = await useFetch("/api/auth/signup", {
-		immediate: false,
-		watch: false,
-		method: "POST",
-		body: values,
-	});
+	const status = ref("idle");
+	// const { data, status, error, execute } = await useFetch("/api/auth/signup", {
+	// 	immediate: false,
+	// 	watch: false,
+	// 	method: "POST",
+	// 	body: values,
+	// });
 
 	const submit = handleSubmit(async () => {
-		await execute();
-		if (status.value === "error") {
-			useSonner.error("Ocurrió un error", {
-				description: error.value?.statusMessage,
-			});
-			return;
-		}
-		useSonner.success("Cuenta creada!", {
-			description: "Se ha creado correctamente tu cuenta.",
-		});
-
-		navigateTo("/acceso", {
-			replace: true,
-		});
+		console.log("values", values.password);
+		const { data, error } = await authClient.signUp.email(
+			{
+				email: values.email!,
+				password: values.password!,
+				name: values.name!,
+			},
+			{
+				onRequest() {
+					status.value = "pending";
+				},
+				onSuccess() {
+					status.value = "success";
+					useSonner.success("Cuenta creada!", {
+						description: "Se ha creado correctamente tu cuenta.",
+					});
+					navigateTo("/app", {
+						replace: true,
+						external: true,
+					});
+				},
+				onError({ response }) {
+					status.value = "error";
+					useSonner.error("Ocurrió un error", {
+						description: "Ha ocurrido un error al crear tu cuenta.",
+					});
+				},
+			}
+		);
+		// await execute();
+		// if (status.value === "error") {
+		// 	useSonner.error("Ocurrió un error", {
+		// 		description: error.value?.statusMessage,
+		// 	});
+		// 	return;
+		// }
+		// useSonner.success("Cuenta creada!", {
+		// 	description: "Se ha creado correctamente tu cuenta.",
+		// });
 	});
 </script>
 <template>

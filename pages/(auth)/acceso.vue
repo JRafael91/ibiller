@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 	import { loginSchemaZod } from "#shared/utils/login-schema.zod";
+	import { authClient } from "~/lib/auth-client";
 
 	definePageMeta({
 		layout: "full",
 	});
 
 	const title = "Iniciar sesión";
-	const description = "Introduzca su correo electrónico y contraseña para iniciar sesión.";
+	const description = "Nos encanta verte de nuevo.";
 
 	useSeoMeta({ title, description });
 
@@ -16,27 +17,66 @@
 		validationSchema: toTypedSchema(loginSchema),
 	});
 
-	const { data, status, error, execute } = await useFetch("/api/auth/login", {
-		immediate: false,
-		watch: false,
-		method: "POST",
-		body: values,
-	});
+	const status = ref("idle");
+
+	// const { data, status, error, execute } = await useFetch("/api/auth/login", {
+	// 	immediate: false,
+	// 	watch: false,
+	// 	method: "POST",
+	// 	body: values,
+	// });
 
 	const submit = handleSubmit(async () => {
-		await execute();
-		if (status.value === "error") {
-			useSonner.error("Ocurrió un error", {
-				description: error.value?.statusMessage,
-			});
-			return;
-		}
-		useSonner.success("Bienvenido de nuevo!", {
-			description: "Has iniciado sesión correctamente.",
-		});
-		navigateTo("/app", {
-			replace: true,
-		});
+		console.log("submit values", values);
+		const { data, error } = await authClient.signIn.email(
+			{
+				email: values.email!,
+				password: values.password!,
+			},
+			{
+				onRequest() {
+					status.value = "pending";
+				},
+				onSuccess() {
+					useSonner.success("Bienvenido de nuevo!", {
+						description: "Has iniciado sesión correctamente.",
+					});
+					setTimeout(() => {
+						navigateTo("/app", {
+							replace: true,
+							external: true,
+						});
+					}, 1000);
+					status.value = "success";
+				},
+				onError({ response }) {
+					status.value = "error";
+					let description =
+						"Ocurrió un error. Intenta nuevamente o pongase en contacto con administrador.";
+					if (response.status === 401) {
+						description = "Correo electrónico o la contraseña son incorrectos.";
+					} else if (response.status === 429) {
+						description = "Demasiados intentos de inicio de sesión. Intenta nuevamente más tarde.";
+					}
+					useSonner.error("Ocurrió un error", {
+						description,
+					});
+				},
+			}
+		);
+		// await execute();
+		// if (status.value === "error") {
+		// 	useSonner.error("Ocurrió un error", {
+		// 		description: error.value?.statusMessage,
+		// 	});
+		// 	return;
+		// }
+		// useSonner.success("Bienvenido de nuevo!", {
+		// 	description: "Has iniciado sesión correctamente.",
+		// });
+		// navigateTo("/app", {
+		// 	replace: true,
+		// });
 	});
 </script>
 
@@ -82,7 +122,13 @@
 							>¿Olvidaste la contraseña?</NuxtLink
 						>
 					</div>
-					<UiButton class="w-full" type="submit" text="Acceder" />
+					<UiButton
+						class="w-full"
+						type="submit"
+						:text="status == 'pending' ? 'Accediendo' : 'Acceder'"
+						:loading="status == 'pending'"
+						:disabled="status == 'pending'"
+					/>
 				</fieldset>
 			</form>
 
