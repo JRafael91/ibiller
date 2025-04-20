@@ -63,7 +63,7 @@ export const verification = t.pgTable("verification", {
 });
 
 export const business = t.pgTable("business", {
-	id: t.uuid("id").primaryKey(),
+	id: t.uuid("id").primaryKey().defaultRandom(),
 	name: t.text("name").notNull(),
 	rfc: t.text("rfc").notNull().unique(),
 	address: t.text("address"),
@@ -86,11 +86,11 @@ export const business_user = t.pgTable("business_user", {
 	userId: t
 		.text("user_id")
 		.notNull()
-		.references(() => user.id),
+		.references(() => user.id, { onDelete: "cascade" }),
 	businessId: t
 		.uuid("business_id")
 		.notNull()
-		.references(() => business.id),
+		.references(() => business.id, { onDelete: "cascade" }),
 	role: t.text("role").notNull(),
 	...timestampsColumns,
 });
