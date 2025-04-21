@@ -11,9 +11,17 @@
 
 	const handleClose = () => {
 		isSheetOpen.value = false;
-		navigateTo("/app", {
-			replace: true,
-		});
+	};
+
+	const handleSave = () => {
+		isSheetOpen.value = false;
+
+		setTimeout(() => {
+			navigateTo("/app", {
+				replace: true,
+				external: true,
+			});
+		}, 500);
 	};
 </script>
 <template>
@@ -38,7 +46,7 @@
 							Configuración
 						</UiButton>
 					</template>
-					<FormsBusiness @close="handleClose" />
+					<FormsBusiness @close="handleClose" @submit="handleSave" />
 				</FormsParentSheet>
 			</div>
 		</div>

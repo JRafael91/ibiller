@@ -15,13 +15,13 @@
 									<div
 										class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground"
 									>
-										<Icon mode="svg" :name="activeTeam.logo" class="size-4" />
+										<Icon mode="svg" name="lucide:building-2" class="size-4" />
 									</div>
 									<div class="grid flex-1 text-left text-sm leading-tight">
 										<span class="truncate font-semibold">
-											{{ activeTeam.name }}
+											{{ businessActive?.business.name ?? "Negocio no seleccionado" }}
 										</span>
-										<span class="truncate text-xs">{{ activeTeam.plan }}</span>
+										<span class="truncate text-xs">{{ businessActive?.business.rfc }}</span>
 									</div>
 									<Icon mode="svg" name="lucide:chevrons-up-down" class="ml-auto" />
 								</UiSidebarMenuButton>
@@ -33,18 +33,18 @@
 								:side-offset="4"
 							>
 								<UiDropdownMenuLabel class="text-xs text-muted-foreground">
-									Teams
+									Negocios
 								</UiDropdownMenuLabel>
-								<template v-for="(team, index) in data.teams" :key="index">
+								<template v-for="(business, index) in user.data.value?.business_user" :key="index">
 									<UiDropdownMenuItem
 										class="cursor-pointer gap-2 p-2"
-										:class="[team.name == activeTeam.name && 'bg-muted']"
-										@click="activeTeam = team"
+										:class="[business.business.name == activeTeam.name && 'bg-muted']"
 									>
+										<!-- @click="activeTeam = team" -->
 										<div class="flex size-6 items-center justify-center rounded-sm border">
-											<Icon mode="svg" :name="team.logo" class="size-4 shrink-0" />
+											<Icon mode="svg" name="lucide:gallery-vertical-end" class="size-4 shrink-0" />
 										</div>
-										{{ team.name }}
+										{{ business.business.name }}
 										<UiDropdownMenuShortcut>⌘{{ index + 1 }}</UiDropdownMenuShortcut>
 									</UiDropdownMenuItem>
 								</template>
@@ -55,7 +55,7 @@
 									>
 										<Icon name="lucide:plus" class="size-4" />
 									</div>
-									<div class="font-medium text-muted-foreground">Add team</div>
+									<div class="font-medium text-muted-foreground">Agregar negocio</div>
 								</UiDropdownMenuItem>
 							</UiDropdownMenuContent>
 						</UiDropdownMenu>
@@ -93,14 +93,14 @@
 								>
 									<UiAvatar class="size-8 rounded-lg">
 										<UiAvatarImage
-											:src="session.data?.user?.image ?? ''"
-											:alt="session.data?.user.name"
+											:src="user.data.value?.image ?? ''"
+											:alt="user.data.value?.name"
 										/>
 										<UiAvatarFallback class="rounded-lg">{{ fallBackAvatar }}</UiAvatarFallback>
 									</UiAvatar>
 									<div class="grid flex-1 text-left text-sm leading-tight">
-										<span class="truncate font-semibold">{{ session.data?.user.name }}</span>
-										<span class="truncate text-xs">{{ session.data?.user.email }}</span>
+										<span class="truncate font-semibold">{{ user.data.value?.name }}</span>
+										<span class="truncate text-xs">{{ user.data.value?.email }}</span>
 									</div>
 									<Icon name="lucide:chevrons-up-down" class="ml-auto size-4" />
 								</UiSidebarMenuButton>
@@ -115,14 +115,14 @@
 									<div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 										<UiAvatar class="size-8 rounded-lg">
 											<UiAvatarImage
-												:src="session.data?.user.image ?? ''"
-												:alt="session.data?.user.name"
+												:src="user.data.value?.image ?? ''"
+												:alt="user.data.value?.name"
 											/>
 											<UiAvatarFallback class="rounded-lg">{{ fallBackAvatar }}</UiAvatarFallback>
 										</UiAvatar>
 										<div class="grid flex-1 text-left text-sm leading-tight">
-											<span class="truncate font-semibold">{{ session.data?.user.name }}</span>
-											<span class="truncate text-xs">{{ session.data?.user.email }}</span>
+											<span class="truncate font-semibold">{{ user.data.value?.name }}</span>
+											<span class="truncate text-xs">{{ user.data.value?.email }}</span>
 										</div>
 									</div>
 								</UiDropdownMenuLabel>
@@ -171,12 +171,15 @@
 
 	const route = useRoute();
 
-	const session = authClient.useSession();
+	const user = await useFetch("/api/session");
+	console.log(user.data.value);
+	const businessActive = ref(user.data.value?.business_user[0]);
 	const fallBackAvatar = computed(() => {
-		const firstLetterName = session.value.data?.user.name.charAt(0).toUpperCase();
-		const firstLetterLastName = session.value.data?.user.name.split(" ")[1].charAt(0).toUpperCase();
+		const firstLetterName = user.data.value?.name.charAt(0).toUpperCase();
+		const firstLetterLastName = user.data.value?.name.split(" ")[1].charAt(0).toUpperCase();
 		return `${firstLetterName}${firstLetterLastName}`;
 	});
+
 	// Breadcrumb items
 	const breadcrumbs = computed(() => {
 		let paths: any[] = [];

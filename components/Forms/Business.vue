@@ -60,7 +60,7 @@
 	import { businessSchemaZod } from "#shared/utils/business-schema.zod";
 	import { vMaska } from "maska/vue";
 
-	const emits = defineEmits(["close"]);
+	const emits = defineEmits(["close", "submit"]);
 
 	const businessSchema = businessSchemaZod();
 
@@ -81,7 +81,7 @@
 			useSonner.success("Negocio creado!", {
 				description: "Se ha creado correctamente negocio.",
 			});
-			emits("close");
+			emits("submit");
 		} else if (status.value === "error") {
 			useSonner.error("Ocurrió un error", {
 				description: error.value?.statusMessage,
