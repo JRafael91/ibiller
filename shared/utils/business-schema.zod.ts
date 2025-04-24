@@ -25,3 +25,29 @@ export const businessSchemaZod = () => {
 export const safeParse = (values: any) => {
 	return businessSchemaZod().safeParse(values);
 };
+
+export const setField = (values: any) => {
+	if (values.address === "") {
+		return "address";
+	}
+	if (values.zip === "") {
+		return "zip";
+	}
+	if (values.city === "") {
+		return "city";
+	}
+	if (values.state === "") {
+		return "state";
+	}
+	if (values.country === "") {
+		return "country";
+	}
+	if (values.email === "") {
+		return "email";
+	}
+	if (values.phone === "") {
+		return "phone";
+	}
+
+	return null;
+};

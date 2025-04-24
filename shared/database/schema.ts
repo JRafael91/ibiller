@@ -21,6 +21,7 @@ export const user = t.pgTable("user", {
 
 export const usersRelations = relations(user, ({ many }) => ({
 	business_user: many(business_user),
+	plan: many(plan),
 }));
 
 export const session = t.pgTable("session", {
@@ -102,6 +103,27 @@ export const businessUserRelations = relations(business_user, ({ one }) => ({
 	}),
 	user: one(user, {
 		fields: [business_user.userId],
+		references: [user.id],
+	}),
+}));
+
+export const plan = t.pgTable("plans", {
+	id: t.uuid("id").primaryKey().defaultRandom(),
+	name: t.text("name").notNull(),
+	price: t.integer("price").notNull(),
+	dateStart: t.timestamp("date_start").notNull(),
+	dateEnd: t.timestamp("date_end"),
+	period: t.text("period").notNull(),
+	userId: t
+		.text("user_id")
+		.notNull()
+		.references(() => user.id, { onDelete: "cascade" }),
+	...timestampsColumns,
+});
+
+export const planRelations = relations(plan, ({ one }) => ({
+	user: one(user, {
+		fields: [plan.userId],
 		references: [user.id],
 	}),
 }));

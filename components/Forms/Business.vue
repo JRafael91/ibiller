@@ -57,14 +57,14 @@
 </template>
 
 <script lang="ts" setup>
-	import { businessSchemaZod } from "#shared/utils/business-schema.zod";
+	import { businessSchemaZod, setField } from "#shared/utils/business-schema.zod";
 	import { vMaska } from "maska/vue";
 
 	const emits = defineEmits(["close", "submit"]);
 
 	const businessSchema = businessSchemaZod();
 
-	const { handleSubmit, values } = useForm({
+	const { handleSubmit, values, setFieldValue } = useForm({
 		validationSchema: toTypedSchema(businessSchema),
 	});
 
@@ -73,6 +73,13 @@
 		watch: false,
 		method: "POST",
 		body: values,
+	});
+
+	watch(values, (newValues) => {
+		const field = setField(newValues);
+		if (field) {
+			setFieldValue(field, null);
+		}
 	});
 
 	const submit = handleSubmit(async () => {

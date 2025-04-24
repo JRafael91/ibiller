@@ -27,7 +27,6 @@
 	// });
 
 	const submit = handleSubmit(async () => {
-		console.log("submit values", values);
 		const { data, error } = await authClient.signIn.email(
 			{
 				email: values.email!,
@@ -41,13 +40,11 @@
 					useSonner.success("Bienvenido de nuevo!", {
 						description: "Has iniciado sesión correctamente.",
 					});
-					setTimeout(() => {
-						navigateTo("/app", {
-							replace: true,
-							external: true,
-						});
-					}, 1000);
 					status.value = "success";
+					navigateTo("/app", {
+						replace: true,
+						external: true,
+					});
 				},
 				onError({ response }) {
 					status.value = "error";

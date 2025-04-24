@@ -8,7 +8,6 @@
 
 	const isSheetOpen = ref(false);
 	const session = authClient.useSession();
-
 	const handleClose = () => {
 		isSheetOpen.value = false;
 	};

@@ -2,12 +2,12 @@ import { auth } from "~/lib/auth";
 
 export default defineEventHandler(async (event) => {
 	if (!event.path.startsWith("/api")) {
-		// console.log("No es una ruta de API");
+		// No es una ruta de API
 		return;
 	}
 
 	if (event.path.startsWith("/api/auth")) {
-		// console.log("Es una ruta de autenticación");
+		// Es una ruta de autenticación;
 		return;
 	}
 

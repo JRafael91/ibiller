@@ -1,11 +1,11 @@
 <template>
 	<div>
 		<UiSheet :open="isSheetOpen">
-			<UiSheetTrigger class="w-full">
+			<UiSheetTrigger class="flex w-full gap-2">
 				<slot name="trigger"></slot>
 			</UiSheetTrigger>
 			<UiSheetContent
-				class="sm:max-w-none md:w-[450px]"
+				class="overflow-auto sm:max-w-none md:w-[450px]"
 				side="right"
 				:title="title"
 				:description="description"

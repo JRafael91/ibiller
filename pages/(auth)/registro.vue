@@ -43,7 +43,6 @@
 	// });
 
 	const submit = handleSubmit(async () => {
-		console.log("values", values.password);
 		const { data, error } = await authClient.signUp.email(
 			{
 				email: values.email!,
@@ -54,7 +53,13 @@
 				onRequest() {
 					status.value = "pending";
 				},
-				onSuccess() {
+				async onSuccess(ctx) {
+					await useFetch("/api/auth/plan", {
+						method: "POST",
+						body: {
+							userId: ctx.data.user.id,
+						},
+					});
 					status.value = "success";
 					useSonner.success("Cuenta creada!", {
 						description: "Se ha creado correctamente tu cuenta.",

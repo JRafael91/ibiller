@@ -9,6 +9,10 @@
 		layout: "dashboard",
 		breadcrumb: [{ label: "Dashboard", link: "/app" }],
 	});
+	useSeoMeta({
+		title: "Dashboard",
+		description: "Tablero de control",
+	});
 </script>
 
 <style></style>

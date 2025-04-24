@@ -15,13 +15,13 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 		}
 	}
 
-	if (to.path === "/app/onboarding") {
+	if (session.value && to.path === "/app/onboarding") {
 		return;
 	}
 
-	const { data } = await useFetch("/api/session");
+	const user = session.value?.user as any;
 
-	if (data.value?.business_user.length === 0) {
+	if (user?.business_user.length === 0) {
 		return navigateTo("/app/onboarding");
 	}
 });

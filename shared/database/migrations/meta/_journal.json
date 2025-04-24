@@ -22,6 +22,20 @@
       "when": 1745131175965,
       "tag": "0002_white_aqueduct",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1745213925449,
+      "tag": "0003_steady_unus",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1745303575025,
+      "tag": "0004_brave_queen_noir",
+      "breakpoints": true
     }
   ]
 }

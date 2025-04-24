@@ -35,10 +35,10 @@
 								<UiDropdownMenuLabel class="text-xs text-muted-foreground">
 									Negocios
 								</UiDropdownMenuLabel>
-								<template v-for="(business, index) in user.data.value?.business_user" :key="index">
+								<template v-for="(business, index) in user.business_user" :key="index">
 									<UiDropdownMenuItem
 										class="cursor-pointer gap-2 p-2"
-										:class="[business.business.name == activeTeam.name && 'bg-muted']"
+										:class="[business.business.name == businessActive.business.name && 'bg-muted']"
 									>
 										<!-- @click="activeTeam = team" -->
 										<div class="flex size-6 items-center justify-center rounded-sm border">
@@ -49,7 +49,11 @@
 									</UiDropdownMenuItem>
 								</template>
 								<UiDropdownMenuSeparator />
-								<UiDropdownMenuItem class="gap-2 p-2">
+								<UiDropdownMenuItem
+									v-if="planActive.name !== Plan.FREE"
+									class="gap-2 p-2"
+									@click="isSheetOpen = !isSheetOpen"
+								>
 									<div
 										class="flex size-6 items-center justify-center rounded-md border bg-background"
 									>
@@ -92,15 +96,12 @@
 									class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 								>
 									<UiAvatar class="size-8 rounded-lg">
-										<UiAvatarImage
-											:src="user.data.value?.image ?? ''"
-											:alt="user.data.value?.name"
-										/>
+										<UiAvatarImage :src="user.image ?? ''" :alt="user.name" />
 										<UiAvatarFallback class="rounded-lg">{{ fallBackAvatar }}</UiAvatarFallback>
 									</UiAvatar>
 									<div class="grid flex-1 text-left text-sm leading-tight">
-										<span class="truncate font-semibold">{{ user.data.value?.name }}</span>
-										<span class="truncate text-xs">{{ user.data.value?.email }}</span>
+										<span class="truncate font-semibold">{{ user.name }}</span>
+										<span class="truncate text-xs">{{ user.email }}</span>
 									</div>
 									<Icon name="lucide:chevrons-up-down" class="ml-auto size-4" />
 								</UiSidebarMenuButton>
@@ -114,15 +115,12 @@
 								<UiDropdownMenuLabel class="p-0 font-normal">
 									<div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 										<UiAvatar class="size-8 rounded-lg">
-											<UiAvatarImage
-												:src="user.data.value?.image ?? ''"
-												:alt="user.data.value?.name"
-											/>
+											<UiAvatarImage :src="user.image ?? ''" :alt="user.name" />
 											<UiAvatarFallback class="rounded-lg">{{ fallBackAvatar }}</UiAvatarFallback>
 										</UiAvatar>
 										<div class="grid flex-1 text-left text-sm leading-tight">
-											<span class="truncate font-semibold">{{ user.data.value?.name }}</span>
-											<span class="truncate text-xs">{{ user.data.value?.email }}</span>
+											<span class="truncate font-semibold">{{ user.name }}</span>
+											<span class="truncate text-xs">{{ user.email }}</span>
 										</div>
 									</div>
 								</UiDropdownMenuLabel>
@@ -164,21 +162,42 @@
 			</div>
 		</UiSidebarInset>
 	</UiSidebarProvider>
+	<FormsParentSheet
+		title="Agregar negocio"
+		description="Aquí puedes agregar un nuevo negocio."
+		:isSheetOpen="isSheetOpen"
+	>
+		<FormsBusiness @close="handleClose" @submit="handleSave" />
+	</FormsParentSheet>
 </template>
 
 <script lang="ts" setup>
 	import { authClient } from "~/lib/auth-client";
+	import { Plan } from "~/types/plan";
 
 	const route = useRoute();
 
-	const user = await useFetch("/api/session");
-	console.log(user.data.value);
-	const businessActive = ref(user.data.value?.business_user[0]);
+	const { data: session } = await authClient.useSession(useFetch);
+
+	const user = ref(session.value?.user) as any;
+
+	const businessActive = ref(user.value?.business_user[0]);
+	const planActive = ref(user.value?.plan[0]);
+
 	const fallBackAvatar = computed(() => {
-		const firstLetterName = user.data.value?.name.charAt(0).toUpperCase();
-		const firstLetterLastName = user.data.value?.name.split(" ")[1].charAt(0).toUpperCase();
-		return `${firstLetterName}${firstLetterLastName}`;
+		const firstLetterName = user.value?.name?.charAt(0).toUpperCase();
+		const firstLetterLastName = user.value?.name.split(" ")[1]?.charAt(0).toUpperCase();
+		return `${firstLetterName}${firstLetterLastName ?? ""}`;
 	});
+
+	const isSheetOpen = ref(false);
+
+	const handleClose = () => {
+		isSheetOpen.value = false;
+	};
+	const handleSave = () => {
+		isSheetOpen.value = false;
+	};
 
 	// Breadcrumb items
 	const breadcrumbs = computed(() => {
