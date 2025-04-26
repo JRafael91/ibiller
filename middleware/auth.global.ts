@@ -1,4 +1,5 @@
 import { authClient } from "~/lib/auth-client";
+import { Plan } from "~/types/plan";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
 	const { data: session } = await authClient.useSession(useFetch);
@@ -23,5 +24,15 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
 	if (user?.business_user.length === 0) {
 		return navigateTo("/app/onboarding");
+	}
+
+	if (session.value && to.path === "/app/configuracion") {
+		return;
+	}
+
+	if (session.value && user?.plan[0]?.name === Plan.FREE && to.path !== "/app/cotizaciones/nuevo") {
+		return navigateTo("/app/cotizaciones/nuevo", {
+			replace: true,
+		});
 	}
 });

@@ -77,7 +77,11 @@
 							>
 								<NuxtLink :href="item.url">
 									<Icon mode="svg" :name="item.icon" />
-									<span>{{ item.name }}</span>
+									<span>
+										{{ item.name }}
+
+										<UiBadge v-if="item.plan === Plan.PRO" size="xs">{{ item.plan }}</UiBadge>
+									</span>
 								</NuxtLink>
 							</UiSidebarMenuButton>
 						</UiSidebarMenuItem>
@@ -239,16 +243,19 @@
 				name: "Dashboard",
 				url: { name: "app" },
 				icon: "lucide:frame",
+				plan: Plan.PRO,
 			},
 			{
 				name: "Cotizaciones",
 				url: { name: "app-cotizaciones" },
 				icon: "lucide:map",
+				plan: Plan.PRO,
 			},
 			{
 				name: "Productos",
 				url: { name: "app-productos" },
 				icon: "lucide:pie-chart",
+				plan: Plan.PRO,
 			},
 			// {
 			//   name: "Clientes",
@@ -256,9 +263,10 @@
 			//   icon: "lucide:user",
 			// },
 			{
-				name: "Configuraciones",
-				url: { name: "app-configuraciones" },
+				name: "Configuracion",
+				url: { name: "app-configuracion" },
 				icon: "lucide:settings-2",
+				plan: Plan.FREE,
 			},
 		],
 	};

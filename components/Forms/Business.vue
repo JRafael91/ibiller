@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts" setup>
-	import { businessSchemaZod, setField } from "#shared/utils/business-schema.zod";
+	import { businessSchemaZod, evaluateField } from "#shared/utils/business-schema.zod";
 	import { vMaska } from "maska/vue";
 
 	const emits = defineEmits(["close", "submit"]);
@@ -76,7 +76,7 @@
 	});
 
 	watch(values, (newValues) => {
-		const field = setField(newValues);
+		const field = evaluateField(newValues);
 		if (field) {
 			setFieldValue(field, null);
 		}

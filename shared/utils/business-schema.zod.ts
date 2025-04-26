@@ -26,7 +26,7 @@ export const safeParse = (values: any) => {
 	return businessSchemaZod().safeParse(values);
 };
 
-export const setField = (values: any) => {
+export const evaluateField = (values: any) => {
 	if (values.address === "") {
 		return "address";
 	}
