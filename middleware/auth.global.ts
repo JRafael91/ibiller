@@ -29,10 +29,4 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 	if (session.value && to.path === "/app/configuracion") {
 		return;
 	}
-
-	if (session.value && user?.plan[0]?.name === Plan.FREE && to.path !== "/app/cotizaciones/nuevo") {
-		return navigateTo("/app/cotizaciones/nuevo", {
-			replace: true,
-		});
-	}
 });

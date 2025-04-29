@@ -1,9 +1,12 @@
 <template>
-	<div>
-		<h2>Soy el index de cotizaciones</h2>
+	<div class="">
 		<NuxtLink :to="{ name: 'app-cotizaciones-nuevo' }" as-child>
-			<UiButton> Nueva cotización </UiButton>
+			<UiButton>
+				<Icon name="lucide:plus" class="mr-2 h-4 w-4" />
+				Nueva cotización
+			</UiButton>
 		</NuxtLink>
+		<TableQuotation class="mt-5"></TableQuotation>
 	</div>
 </template>
 
