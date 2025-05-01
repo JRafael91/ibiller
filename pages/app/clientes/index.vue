@@ -3,21 +3,21 @@
 		<NuxtLink :to="{ name: 'app-cotizaciones-nuevo' }" as-child>
 			<UiButton>
 				<Icon name="lucide:plus" class="mr-2 h-4 w-4" />
-				Nueva cotización
+				Nuevo cliente
 			</UiButton>
 		</NuxtLink>
-		<TableQuotation class="mt-5"></TableQuotation>
+		<TableCustomer class="mt-5"></TableCustomer>
 	</div>
 </template>
 
 <script lang="ts" setup>
 	definePageMeta({
 		layout: "dashboard",
-		breadcrumb: [{ label: "Cotizaciones", link: "/app/cotizaciones" }],
+		breadcrumb: [{ label: "Clientes", link: "/app/clientes" }],
 	});
 	useSeoMeta({
-		title: "Cotizaciones",
-		description: "Lista de cotizaciones",
+		title: "Clientes",
+		description: "Listado de clientes",
 	});
 </script>
 

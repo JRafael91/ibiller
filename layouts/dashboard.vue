@@ -176,6 +176,7 @@
 </template>
 
 <script lang="ts" setup>
+	import Icon from "~/components/Ui/Select/Icon.vue";
 	import { authClient } from "~/lib/auth-client";
 	import { Plan } from "~/types/plan";
 
@@ -250,6 +251,12 @@
 				url: { name: "app-cotizaciones" },
 				icon: "lucide:map",
 				plan: Plan.PRO,
+			},
+			{
+				name: "Clientes",
+				url: { name: "app-clientes" },
+				icon: "lucide:user",
+				plan: Plan.FREE,
 			},
 			{
 				name: "Productos",

@@ -19,13 +19,6 @@
 
 	const status = ref("idle");
 
-	// const { data, status, error, execute } = await useFetch("/api/auth/login", {
-	// 	immediate: false,
-	// 	watch: false,
-	// 	method: "POST",
-	// 	body: values,
-	// });
-
 	const submit = handleSubmit(async () => {
 		const { data, error } = await authClient.signIn.email(
 			{
@@ -61,19 +54,6 @@
 				},
 			}
 		);
-		// await execute();
-		// if (status.value === "error") {
-		// 	useSonner.error("Ocurrió un error", {
-		// 		description: error.value?.statusMessage,
-		// 	});
-		// 	return;
-		// }
-		// useSonner.success("Bienvenido de nuevo!", {
-		// 	description: "Has iniciado sesión correctamente.",
-		// });
-		// navigateTo("/app", {
-		// 	replace: true,
-		// });
 	});
 </script>
 
@@ -114,7 +94,7 @@
 					</Field>
 					<div class="flex items-start justify-end">
 						<NuxtLink
-							class="text-sm font-medium text-primary underline underline-offset-2"
+							class="text-sm font-semibold text-primary underline underline-offset-4"
 							to="/recuperar"
 							>¿Olvidaste la contraseña?</NuxtLink
 						>

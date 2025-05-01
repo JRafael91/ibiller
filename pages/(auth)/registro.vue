@@ -35,12 +35,6 @@
 	);
 
 	const status = ref("idle");
-	// const { data, status, error, execute } = await useFetch("/api/auth/signup", {
-	// 	immediate: false,
-	// 	watch: false,
-	// 	method: "POST",
-	// 	body: values,
-	// });
 
 	const submit = handleSubmit(async () => {
 		const { data, error } = await authClient.signUp.email(
@@ -77,16 +71,6 @@
 				},
 			}
 		);
-		// await execute();
-		// if (status.value === "error") {
-		// 	useSonner.error("Ocurrió un error", {
-		// 		description: error.value?.statusMessage,
-		// 	});
-		// 	return;
-		// }
-		// useSonner.success("Cuenta creada!", {
-		// 	description: "Se ha creado correctamente tu cuenta.",
-		// });
 	});
 </script>
 <template>
@@ -96,7 +80,7 @@
 				<h1 class="text-2xl font-bold tracking-tight lg:text-3xl">{{ title }}</h1>
 				<p class="mt-1 text-muted-foreground">{{ description }}</p>
 				<form class="mt-10 w-full space-y-4" @submit.prevent="submit">
-					<Field v-slot="{ componentField }" name="name" autocomplete="off">
+					<Field v-slot="{ componentField }" name="name">
 						<UiFormItem label="Nombre">
 							<UiInput v-bind="componentField" type="text" placeholder="John Doe" required />
 						</UiFormItem>
@@ -119,41 +103,41 @@
 					<ul class="flex flex-col gap-4">
 						<li class="flex items-center gap-3 text-sm text-muted-foreground">
 							<Icon
-								:class="[passwordRules.minLength ? 'text-green-500' : '']"
+								:class="[passwordRules.minLength ? 'text-green-600' : '']"
 								class="size-[18px]"
 								name="lucide:check-circle-2"
 							/>
-							<span :class="[passwordRules.minLength ? 'text-green-500' : '']"
+							<span :class="[passwordRules.minLength ? 'text-green-600' : '']"
 								>Mínimo 8 caracteres</span
 							>
 						</li>
 						<li class="flex items-center gap-3 text-sm text-muted-foreground">
 							<Icon
-								:class="[passwordRules.hasMayuscule ? 'text-green-500' : '']"
+								:class="[passwordRules.hasMayuscule ? 'text-green-600' : '']"
 								class="size-[18px]"
 								name="lucide:check-circle-2"
 							/>
-							<span :class="[passwordRules.hasMayuscule ? 'text-green-500' : '']"
+							<span :class="[passwordRules.hasMayuscule ? 'text-green-600' : '']"
 								>Al menos una letra mayuscula</span
 							>
 						</li>
 						<li class="flex items-center gap-3 text-sm text-muted-foreground">
 							<Icon
-								:class="[passwordRules.hasNumber ? 'text-green-500' : '']"
+								:class="[passwordRules.hasNumber ? 'text-green-600' : '']"
 								class="size-[18px]"
 								name="lucide:check-circle-2"
 							/>
-							<span :class="[passwordRules.hasNumber ? 'text-green-500' : '']"
+							<span :class="[passwordRules.hasNumber ? 'text-green-600' : '']"
 								>Al menos un número</span
 							>
 						</li>
 						<li class="flex items-center gap-3 text-sm text-muted-foreground">
 							<Icon
-								:class="[passwordRules.hasNumberAndSpecialChar ? 'text-green-500' : '']"
+								:class="[passwordRules.hasNumberAndSpecialChar ? 'text-green-600' : '']"
 								class="size-[18px]"
 								name="lucide:check-circle-2"
 							/>
-							<span :class="[passwordRules.hasNumberAndSpecialChar ? 'text-green-500' : '']">
+							<span :class="[passwordRules.hasNumberAndSpecialChar ? 'text-green-600' : '']">
 								Al menos un carácter especial
 							</span>
 						</li>
