@@ -127,3 +127,23 @@ export const planRelations = relations(plan, ({ one }) => ({
 		references: [user.id],
 	}),
 }));
+
+export const customer = t.pgTable("customers", {
+	id: t.uuid("id").primaryKey().defaultRandom(),
+	businessName: t.text("business_name").notNull(),
+	commercialName: t.text("commercial_name"),
+	rfc: t.text("rfc"),
+	address: t.text("address"),
+	zip: t.text("zip"),
+	city: t.text("city"),
+	state: t.text("state"),
+	country: t.text("country"),
+	email: t.text("email"),
+	phone: t.text("phone"),
+	active: t.boolean("active").notNull().default(true),
+	businessId: t
+		.uuid("business_id")
+		.notNull()
+		.references(() => business.id, { onDelete: "cascade" }),
+	...timestampsColumns,
+});

@@ -27,9 +27,9 @@ export default defineEventHandler(async (event) => {
 	});
 
 	if (findBusiness) {
-		setResponseStatus(event, 409);
+		setResponseStatus(event, 400);
 		throw createError({
-			statusCode: 409,
+			statusCode: 400,
 			statusMessage: "El RFC ya existe",
 		});
 	}

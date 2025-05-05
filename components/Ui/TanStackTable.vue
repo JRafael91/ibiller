@@ -90,7 +90,6 @@
 				</UiTableBody>
 			</UiTable>
 		</div>
-
 		<div
 			v-if="showPagination"
 			class="my-6 flex flex-col justify-between gap-4 px-2 md:flex-row md:items-center"
@@ -199,7 +198,7 @@
 
 	const props = withDefaults(
 		defineProps<{
-			data?: T[];
+			data: T[] | null;
 			columns?: ColumnDef<T>[];
 			search?: string;
 			showSelect?: boolean;
@@ -283,7 +282,7 @@
 
 	const table = useVueTable({
 		get data() {
-			return props.data;
+			return props.data ?? [];
 		},
 		get columns() {
 			return localColumns;
@@ -320,6 +319,27 @@
 		onRowSelectionChange: (updaterOrValue) => {
 			rowSelection.value =
 				typeof updaterOrValue === "function" ? updaterOrValue(rowSelection.value) : updaterOrValue;
+		},
+		globalFilterFn: (row, columnId, filterValue) => {
+			const search = String(filterValue).toLowerCase();
+
+			// Si no hay texto de búsqueda, mostrar todas las filas
+			if (!search) return true;
+
+			// Obtener solo las columnas visibles que son filtrables
+			const searchableColumns: ColumnDef<T>[] = table
+				.getAllLeafColumns()
+				.filter(
+					(column: ColumnDef<T>) =>
+						table.getColumn(column?.id ?? "")?.getIsVisible() && column.id !== "actions"
+				);
+
+			// Buscar en todas las columnas visibles
+			return searchableColumns.some((column) => {
+				const value = column?.id ? row.getValue(column.id) : null;
+				if (value === null || value === undefined) return false;
+				return String(value).toLowerCase().includes(search);
+			});
 		},
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),

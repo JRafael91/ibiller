@@ -5,7 +5,7 @@
 				<slot name="trigger"></slot>
 			</UiSheetTrigger>
 			<UiSheetContent
-				class="overflow-auto sm:max-w-none md:w-[450px]"
+				class="overflow-auto sm:max-w-none md:w-[650px]"
 				side="right"
 				:title="title"
 				:description="description"

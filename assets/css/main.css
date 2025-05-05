@@ -1,0 +1,29 @@
+	.form-grid {
+	  display: grid;
+	  grid-template-columns: repeat(6, 1fr);
+	  gap: 10px;
+	}
+
+	.form-item-6 {
+	  grid-column: span 6;
+	}
+
+	.form-item-5 {
+	  grid-column: span 5;
+	}
+
+	.form-item-4 {
+	  grid-column: span 4;
+	}
+
+	.form-item-3 {
+	  grid-column: span 3;
+	}
+
+	.form-item-2 {
+	  grid-column: span 2;
+	}
+
+	.form-item-1 {
+	  grid-column: span 1;
+	}

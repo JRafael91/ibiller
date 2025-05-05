@@ -36,6 +36,20 @@
       "when": 1745303575025,
       "tag": "0004_brave_queen_noir",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1746076655057,
+      "tag": "0005_volatile_wither",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1746248369558,
+      "tag": "0006_secret_firestar",
+      "breakpoints": true
     }
   ]
 }
