@@ -108,7 +108,9 @@
 									default: () => [
 										h(
 											resolveComponent("UiDropdownMenuItem"),
-											{},
+											{
+												onClick: () => details(row),
+											},
 											{
 												default: () => [
 													h(resolveComponent("Icon"), {
@@ -121,7 +123,9 @@
 										),
 										h(
 											resolveComponent("UiDropdownMenuItem"),
-											{},
+											{
+												onClick: () => update(row),
+											},
 											{
 												default: () => [
 													h(resolveComponent("Icon"), {
@@ -135,7 +139,10 @@
 										h(resolveComponent("UiDropdownMenuSeparator")),
 										h(
 											resolveComponent("UiDropdownMenuItem"),
-											{ class: "text-destructive" },
+											{
+												onClick: () => remove(row),
+												class: "text-destructive",
+											},
 											{
 												default: () => [
 													h(resolveComponent("Icon"), {
@@ -155,4 +162,15 @@
 			},
 		},
 	];
+
+	const details = (row: any) => {
+		const customer = row.original;
+	};
+
+	const update = (row: any) => {
+		const customer = row.original;
+	};
+	const remove = (row: any) => {
+		const customer = row.original;
+	};
 </script>
