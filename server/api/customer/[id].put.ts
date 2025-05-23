@@ -31,28 +31,30 @@ export default defineEventHandler(async (event) => {
 	});
 
 	if (findCustomerByRfc && findCustomerByRfc.id !== id) {
-		setResponseStatus(event, 400);
+		setResponseStatus(event, 409); // Align status code for conflict
 		throw createError({
 			statusCode: 409,
-			statusMessage: "El RFC ya existe",
+			statusMessage: "El RFC ya está en uso por otro cliente", // More specific message
 		});
 	}
 
-	const customer = await db
+	const updatedCustomerResult = await db
 		.update(tables.customer)
 		.set({
 			...data,
-			rfc,
+			rfc, // rfc will be undefined if not in body and optional, leading to NULL if DB column allows
 		})
 		.where(eq(tables.customer.id, id))
 		.returning();
-	if (!customer) {
-		setResponseStatus(event, 500);
+
+	// Check if the update was successful and if any row was actually updated.
+	if (!updatedCustomerResult || updatedCustomerResult.length === 0) {
+		setResponseStatus(event, 404); // Not found
 		throw createError({
-			statusCode: 500,
-			statusMessage: "Error al actualizar el cliente",
+			statusCode: 404,
+			statusMessage: "Cliente no encontrado para actualizar",
 		});
 	}
 
-	return "Cliente actualizado correctamente";
+	return { message: "Cliente actualizado correctamente" }; // Standardized JSON response
 });

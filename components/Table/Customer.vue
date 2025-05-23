@@ -56,6 +56,8 @@
 		}
 	);
 
+	const emit = defineEmits(["edit-customer"]);
+
 	const tableRef = ref();
 	const table = ref<Table<Customer> | null>(null);
 	const search = ref("");
@@ -108,7 +110,11 @@
 									default: () => [
 										h(
 											resolveComponent("UiDropdownMenuItem"),
-											{},
+											{
+												onClick: () => {
+													emit("edit-customer", row.original);
+												},
+											},
 											{
 												default: () => [
 													h(resolveComponent("Icon"), {

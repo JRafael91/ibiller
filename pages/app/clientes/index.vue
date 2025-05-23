@@ -1,19 +1,27 @@
 <template>
 	<div>
 		<div class="flex justify-end">
-			<UiButton @click="isSheetOpen = !isSheetOpen">
+			<UiButton @click="openNewClientSheet">
 				<Icon name="lucide:plus" class="mr-2 h-4 w-4" />
 				Nuevo
 			</UiButton>
 		</div>
-		<TableCustomer class="mt-5" :data="data"></TableCustomer>
+		<TableCustomer class="mt-5" :data="data" @edit-customer="handleEditCustomer"></TableCustomer>
 	</div>
 	<FormsParentSheet
-		title="Agregar cliente"
-		description="Aquí puedes agregar un nuevo cliente."
+		:title="isEditMode ? 'Editar Cliente' : 'Agregar cliente'"
+		:description="
+			isEditMode
+				? 'Actualiza los datos del cliente.'
+				: 'Aquí puedes agregar un nuevo cliente.'
+		"
 		:isSheetOpen="isSheetOpen"
 	>
-		<FormsCustomer @submit="handleSave" @close="handleClose" />
+		<FormsCustomer
+			@submit="handleSave"
+			@close="handleClose"
+			:initialData="isEditMode ? editingCustomer : null"
+		/>
 	</FormsParentSheet>
 </template>
 
@@ -30,12 +38,30 @@
 	});
 
 	const isSheetOpen = ref(false);
+	const isEditMode = ref(false);
+	const editingCustomer = ref<Customer | null>(null);
+
+	const openNewClientSheet = () => {
+		isEditMode.value = false;
+		editingCustomer.value = null;
+		isSheetOpen.value = true;
+	};
+
+	const handleEditCustomer = (customer: Customer) => {
+		editingCustomer.value = customer;
+		isEditMode.value = true;
+		isSheetOpen.value = true;
+	};
 
 	const handleClose = () => {
 		isSheetOpen.value = false;
+		isEditMode.value = false;
+		editingCustomer.value = null;
 	};
 	const handleSave = async () => {
 		isSheetOpen.value = false;
+		isEditMode.value = false;
+		editingCustomer.value = null;
 		await execute();
 	};
 

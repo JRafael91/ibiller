@@ -70,35 +70,70 @@
 <script lang="ts" setup>
 	import { customerSchemaZod } from "#shared/utils/customer-schema.zod";
 	import { vMaska } from "maska/vue";
+	import type { Customer } from "~/types/customer";
+
+	const props = defineProps<{
+		initialData?: Customer | null;
+	}>();
 
 	const emits = defineEmits(["close", "submit"]);
 
 	const customerSchema = customerSchemaZod();
 
-	const { handleSubmit, values } = useForm({
+	const { handleSubmit, values, setValues, meta } = useForm({
 		validationSchema: toTypedSchema(customerSchema),
+		initialValues: props.initialData ?? {},
 	});
 
-	const { data, status, error, execute } = useCustomFetch("/api/customer", {
-		immediate: false,
-		method: "POST",
-		watch: false,
-		body: values,
+	watchEffect(() => {
+		if (props.initialData) {
+			setValues(props.initialData);
+		} else {
+			// Reset form if initialData becomes null (e.g. switching from edit to create)
+			setValues({
+				businessName: "",
+				commercialName: "",
+				rfc: "",
+				address: "",
+				zip: "",
+				city: "",
+				state: "",
+				country: "",
+				email: "",
+				phone: "",
+			});
+		}
 	});
 
-	const submit = handleSubmit(async () => {
-		await execute();
+	const submit = handleSubmit(async (formValues) => {
+		const isEditMode = !!props.initialData?.id;
+		const method = isEditMode ? "PUT" : "POST";
+		const url = isEditMode ? `/api/customer/${props.initialData?.id}` : "/api/customer";
+
+		const { data, status, error, execute } = useCustomFetch(url, {
+			immediate: false,
+			method,
+			body: formValues, // Use validated formValues from handleSubmit
+		});
+
+		await execute(); // Execute the fetch operation
+
 		if (status.value === "success") {
-			useSonner.success("Cliente guardado", {
-				description: "El cliente ha sido guardado correctamente",
+			useSonner.success(isEditMode ? "Cliente actualizado" : "Cliente guardado", {
+				description: `El cliente ha sido ${
+					isEditMode ? "actualizado" : "guardado"
+				} correctamente`,
 				position: "top-center",
 			});
 			emits("submit");
 		} else if (status.value === "error") {
-			useSonner.error("Error al guardar el cliente", {
-				description: error.value?.message,
-				position: "top-center",
-			});
+			useSonner.error(
+				isEditMode ? "Error al actualizar el cliente" : "Error al guardar el cliente",
+				{
+					description: error.value?.message || "Ocurrió un error inesperado.",
+					position: "top-center",
+				}
+			);
 		}
 	});
 </script>
