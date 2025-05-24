@@ -6,23 +6,21 @@
 				Nuevo
 			</UiButton>
 		</div>
-		<TableCustomer class="mt-5" :data="data" @edit-customer="handleEditCustomer"></TableCustomer>
+		<TableCustomer class="mt-5" :data="data" @edit-customer="handleEditCustomer" />
+		<FormsParentSheet
+			:title="isEditMode ? 'Editar Cliente' : 'Agregar cliente'"
+			:description="
+				isEditMode ? 'Actualiza los datos del cliente.' : 'Aquí puedes agregar un nuevo cliente.'
+			"
+			:is-sheet-open="isSheetOpen"
+		>
+			<FormsCustomer
+				:initial-data="isEditMode ? editingCustomer : null"
+				@submit="handleSave"
+				@close="handleClose"
+			/>
+		</FormsParentSheet>
 	</div>
-	<FormsParentSheet
-		:title="isEditMode ? 'Editar Cliente' : 'Agregar cliente'"
-		:description="
-			isEditMode
-				? 'Actualiza los datos del cliente.'
-				: 'Aquí puedes agregar un nuevo cliente.'
-		"
-		:isSheetOpen="isSheetOpen"
-	>
-		<FormsCustomer
-			@submit="handleSave"
-			@close="handleClose"
-			:initialData="isEditMode ? editingCustomer : null"
-		/>
-	</FormsParentSheet>
 </template>
 
 <script lang="ts" setup>
@@ -65,7 +63,7 @@
 		await execute();
 	};
 
-	const { data, status, error, execute } = useCustomFetch<Customer[]>("/api/customer", {
+	const { data, execute } = useCustomFetch<Customer[]>("/api/customer", {
 		method: "GET",
 	});
 </script>

@@ -110,11 +110,7 @@
 									default: () => [
 										h(
 											resolveComponent("UiDropdownMenuItem"),
-											{
-												onClick: () => {
-													emit("edit-customer", row.original);
-												},
-											},
+											{},
 											{
 												default: () => [
 													h(resolveComponent("Icon"), {
@@ -127,7 +123,11 @@
 										),
 										h(
 											resolveComponent("UiDropdownMenuItem"),
-											{},
+											{
+												onClick: () => {
+													emit("edit-customer", row.original);
+												},
+											},
 											{
 												default: () => [
 													h(resolveComponent("Icon"), {

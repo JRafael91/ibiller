@@ -2,7 +2,7 @@
 	<div>
 		<UiSheet :open="isSheetOpen">
 			<UiSheetTrigger class="flex w-full gap-2">
-				<slot name="trigger"></slot>
+				<slot name="trigger" />
 			</UiSheetTrigger>
 			<UiSheetContent
 				class="overflow-auto sm:max-w-none md:w-[650px]"
@@ -20,8 +20,14 @@
 
 <script lang="ts" setup>
 	defineProps({
-		title: String,
-		description: String,
+		title: {
+			type: String,
+			required: true,
+		},
+		description: {
+			type: String,
+			default: "",
+		},
 		isSheetOpen: {
 			type: Boolean,
 			default: false,

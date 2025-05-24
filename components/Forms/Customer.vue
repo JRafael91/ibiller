@@ -48,7 +48,7 @@
 			</Field>
 			<Field v-slot="{ componentField }" name="phone">
 				<UiFormItem label="Teléfono" class="form-item-3">
-					<UiInput v-bind="componentField" v-maska="'(##) #-###-##-##'" />
+					<UiInput v-maska="'(##) #-###-##-##'" v-bind="componentField" />
 				</UiFormItem>
 			</Field>
 		</form>
@@ -80,7 +80,7 @@
 
 	const customerSchema = customerSchemaZod();
 
-	const { handleSubmit, values, setValues, meta } = useForm({
+	const { handleSubmit, values, setValues } = useForm({
 		validationSchema: toTypedSchema(customerSchema),
 		initialValues: props.initialData ?? {},
 	});
@@ -105,30 +105,30 @@
 		}
 	});
 
-	const submit = handleSubmit(async (formValues) => {
-		const isEditMode = !!props.initialData?.id;
-		const method = isEditMode ? "PUT" : "POST";
-		const url = isEditMode ? `/api/customer/${props.initialData?.id}` : "/api/customer";
+	const isEditMode = computed(() => (props.initialData?.id ? true : false));
 
-		const { data, status, error, execute } = useCustomFetch(url, {
-			immediate: false,
-			method,
-			body: formValues, // Use validated formValues from handleSubmit
-		});
+	const method = isEditMode.value ? "PUT" : "POST";
+	const url = isEditMode.value ? `/api/customer/${props.initialData?.id}` : "/api/customer";
 
+	const { status, error, execute } = useCustomFetch(url, {
+		immediate: false,
+		watch: false,
+		method,
+		body: values,
+	});
+
+	const submit = handleSubmit(async () => {
 		await execute(); // Execute the fetch operation
 
 		if (status.value === "success") {
-			useSonner.success(isEditMode ? "Cliente actualizado" : "Cliente guardado", {
-				description: `El cliente ha sido ${
-					isEditMode ? "actualizado" : "guardado"
-				} correctamente`,
+			useSonner.success(isEditMode.value ? "Cliente actualizado" : "Cliente guardado", {
+				description: `El cliente ha sido ${isEditMode.value ? "actualizado" : "guardado"} correctamente`,
 				position: "top-center",
 			});
 			emits("submit");
 		} else if (status.value === "error") {
 			useSonner.error(
-				isEditMode ? "Error al actualizar el cliente" : "Error al guardar el cliente",
+				isEditMode.value ? "Error al actualizar el cliente" : "Error al guardar el cliente",
 				{
 					description: error.value?.message || "Ocurrió un error inesperado.",
 					position: "top-center",

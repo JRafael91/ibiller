@@ -43,7 +43,7 @@
 			</Field>
 			<Field v-slot="{ componentField }" name="phone">
 				<UiFormItem hint="Opcional" label="Teléfono">
-					<UiInput v-bind="componentField" v-maska="'(##) #-###-##-##'" />
+					<UiInput v-maska="'(##) #-###-##-##'" v-bind="componentField" />
 				</UiFormItem>
 			</Field>
 			<div class="mt-4 flex justify-end gap-2">
@@ -68,7 +68,7 @@
 		validationSchema: toTypedSchema(businessSchema),
 	});
 
-	const { data, status, error, execute } = useFetch("/api/business", {
+	const { status, error, execute } = useFetch("/api/business", {
 		immediate: false,
 		watch: false,
 		method: "POST",
