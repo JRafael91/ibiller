@@ -12,4 +12,5 @@ export interface Customer {
 	phone: string | null;
 	active: boolean;
 	businessId: string;
+	createdAt: string;
 }
