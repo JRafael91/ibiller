@@ -56,6 +56,8 @@
 		}
 	);
 
+	const emit = defineEmits(["edit-customer"]);
+
 	const tableRef = ref();
 	const table = ref<Table<Customer> | null>(null);
 	const search = ref("");
@@ -72,7 +74,25 @@
 			enableHiding: true,
 		},
 		{ accessorKey: "rfc", header: "RFC", enableHiding: true },
-		{ accessorKey: "email", header: "Correo electrónico", enableHiding: true },
+		{
+			accessorKey: "email",
+			header: "Correo electrónico",
+			enableHiding: true,
+			cell: ({ row }) => {
+				const date = new Date(row.original.createdAt);
+				console.log("date =>", date);
+				return h(
+					"span",
+					{},
+					`${row.original.email} (${date.toLocaleDateString("es-MX", {
+						year: "numeric",
+						month: "2-digit",
+						day: "2-digit",
+					})})`
+				);
+			},
+		},
+		{ accessorKey: "createdAt", header: "Creado", enableHiding: true },
 		{
 			accessorKey: "actions",
 			header: "",
@@ -124,7 +144,9 @@
 										h(
 											resolveComponent("UiDropdownMenuItem"),
 											{
-												onClick: () => update(row),
+												onClick: () => {
+													emit("edit-customer", row.original);
+												},
 											},
 											{
 												default: () => [
