@@ -10,15 +10,32 @@ export default defineEventHandler(async (event) => {
 
 	const db = useDB();
 
-	const customer = await db.delete(tables.customer).where(eq(tables.customer.id, id)).returning();
+	try {
+		const updatedCustomer = await db
+			.update(tables.customer)
+			.set({
+				deletedAt: new Date(),
+				active: false,
+			})
+			.where(eq(tables.customer.id, id))
+			.returning({ id: tables.customer.id }); // Only return id, or more fields if needed
 
-	if (!customer) {
+		if (!updatedCustomer || updatedCustomer.length === 0) {
+			setResponseStatus(event, 404); // Changed to 404 if not found
+			return {
+				message: "Cliente no encontrado",
+			};
+		}
+
+		return {
+			message: "Cliente desactivado correctamente",
+			customer: updatedCustomer[0],
+		};
+	} catch (error) {
+		console.error("Error al desactivar el cliente:", error);
 		setResponseStatus(event, 500);
-		throw createError({
-			statusCode: 500,
-			statusMessage: "Error al eliminar el cliente",
-		});
+		return {
+			message: "Error al desactivar el cliente",
+		};
 	}
-
-	return "Cliente eliminado correctamente";
 });

@@ -56,7 +56,7 @@
 		}
 	);
 
-	const emit = defineEmits(["edit-customer"]);
+	const emit = defineEmits(["edit-customer", "customer-deleted"]);
 
 	const tableRef = ref();
 	const table = ref<Table<Customer> | null>(null);
@@ -192,7 +192,33 @@
 	const update = (row: any) => {
 		const customer = row.original;
 	};
-	const remove = (row: any) => {
-		const customer = row.original;
+	const remove = async (row: any) => {
+		const customer = row.original as Customer;
+		if (!customer.id) {
+			alert("Error: ID de cliente no encontrado.");
+			return;
+		}
+
+		if (!confirm(`¿Está seguro de que desea eliminar al cliente "${customer.businessName || customer.commercialName}"? Esta acción es irreversible.`)) {
+			return;
+		}
+
+		try {
+			// @ts-ignore
+			const { data, error } = await useCustomFetch(`/api/customer/${customer.id}`, {
+				method: "DELETE",
+			});
+
+			if (error.value) {
+				console.error("Error al eliminar cliente:", error.value);
+				alert(`Error al eliminar cliente: ${error.value.data?.message || error.value.message || 'Error desconocido'}`);
+			} else {
+				alert("Cliente eliminado correctamente.");
+				emit("customer-deleted");
+			}
+		} catch (err) {
+			console.error("Error inesperado al eliminar cliente:", err);
+			alert("Se produjo un error inesperado al intentar eliminar el cliente.");
+		}
 	};
 </script>
