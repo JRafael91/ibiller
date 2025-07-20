@@ -6,7 +6,12 @@
 				Nuevo
 			</UiButton>
 		</div>
-		<TableCustomer class="mt-5" :data="data" @edit-customer="handleEditCustomer" @customer-deleted="handleCustomerDeleted" />
+		<TableCustomer
+			class="mt-5"
+			:data="data"
+			@edit-customer="handleEditCustomer"
+			@delete-customer="handleDeleteCustomer"
+		/>
 		<FormsParentSheet
 			:title="isEditMode ? 'Editar Cliente' : 'Agregar cliente'"
 			:description="
@@ -63,7 +68,7 @@
 		await execute();
 	};
 
-	const handleCustomerDeleted = async () => {
+	const handleDeleteCustomer = async () => {
 		await execute();
 	};
 

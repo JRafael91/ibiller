@@ -130,7 +130,7 @@
 			useSonner.error(
 				isEditMode.value ? "Error al actualizar el cliente" : "Error al guardar el cliente",
 				{
-					description: error.value?.message || "Ocurrió un error inesperado.",
+					description: error.value?.data?.message || "Ocurrió un error inesperado.",
 					position: "top-center",
 				}
 			);

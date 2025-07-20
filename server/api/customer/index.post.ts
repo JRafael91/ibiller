@@ -26,8 +26,6 @@ export default defineEventHandler(async (event) => {
 	}
 	const { rfc, ...data } = result.data;
 
-	console.log("Data", data);
-
 	const findCustomerByRfc = await db.query.customer.findFirst({
 		where: eq(tables.customer.rfc, rfc ?? ""),
 	});
