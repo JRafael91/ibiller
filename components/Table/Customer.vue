@@ -17,6 +17,7 @@
 							v-for="column in table?.getAllColumns().filter((column) => column.getCanHide())"
 							:key="column.id"
 							:checked="column.getIsVisible()"
+							@pointerdown.prevent.stop
 							@update:checked="tableRef?.toggleColumnVisibility(column)"
 						>
 							<span class="text-sm capitalize">{{ column?.columnDef.header }}</span>
@@ -79,20 +80,28 @@
 			header: "Correo electrónico",
 			enableHiding: true,
 			cell: ({ row }) => {
+				return h("span", {}, `${row.original.email}`);
+			},
+		},
+		{
+			accessorKey: "createdAt",
+			header: "Creado",
+			enableHiding: true,
+			cell: ({ row }) => {
 				const date = new Date(row.original.createdAt);
-				console.log("date =>", date);
 				return h(
 					"span",
 					{},
-					`${row.original.email} (${date.toLocaleDateString("es-MX", {
+					`${date.toLocaleString("es-MX", {
 						year: "numeric",
 						month: "2-digit",
 						day: "2-digit",
-					})})`
+						hour: "2-digit",
+						minute: "2-digit",
+					})}`
 				);
 			},
 		},
-		{ accessorKey: "createdAt", header: "Creado", enableHiding: true },
 		{
 			accessorKey: "actions",
 			header: "",
@@ -129,21 +138,6 @@
 										h(
 											resolveComponent("UiDropdownMenuItem"),
 											{
-												onClick: () => details(row),
-											},
-											{
-												default: () => [
-													h(resolveComponent("Icon"), {
-														name: "lucide:eye",
-														class: "mr-2 h-4 w-4",
-													}),
-													"Ver detalle",
-												],
-											}
-										),
-										h(
-											resolveComponent("UiDropdownMenuItem"),
-											{
 												onClick: () => {
 													emit("edit-customer", row.original);
 												},
@@ -160,65 +154,20 @@
 										),
 										h(resolveComponent("UiDropdownMenuSeparator")),
 										h(
-											resolveComponent("UiAlertDialog"),
-											{},
+											resolveComponent("UiDropdownMenuItem"),
 											{
-												trigger: () =>
-													h(
-														resolveComponent("UiDropdownMenuItem"),
-														{
-															class: "text-destructive",
-															onSelect: (e: any) => e.preventDefault(),
-														},
-														{
-															default: () => [
-																h(resolveComponent("Icon"), {
-																	name: "lucide:trash",
-																	class: "mr-2 h-4 w-4",
-																}),
-																"Eliminar",
-															],
-														}
-													),
-												default: () =>
-													h(
-														resolveComponent("UiAlertDialogContent"),
-														{},
-														{
-															default: () => [
-																h(
-																	resolveComponent("UiAlertDialogHeader"),
-																	{},
-																	{
-																		default: () => [
-																			h(resolveComponent("UiAlertDialogTitle"), {}, "Eliminar cliente"),
-																			h(
-																				resolveComponent("UiAlertDialogDescription"),
-																				{},
-																				"¿Estás seguro de que quieres eliminar este cliente? Esta acción no se puede deshacer."
-																			),
-																		],
-																	}
-																),
-																h(
-																	resolveComponent("UiAlertDialogFooter"),
-																	{},
-																	{
-																		default: () => [
-																			h(resolveComponent("UiAlertDialogCancel"), {}, "Cancelar"),
-																			h(
-																				resolveComponent("UiAlertDialogAction"),
-																				{
-																					onClick: () => emit("delete-customer", row.original),
-																				},
-																				"Eliminar"
-																			),
-																		],
-																	}
-																),
-															],
-														}
-													),
+												onClick: () => {
+													emit("delete-customer", row.original);
+												},
+											},
+											{
+												default: () => [
+													h(resolveComponent("Icon"), {
+														name: "lucide:trash",
+														class: "mr-2 h-4 w-4",
+													}),
+													"Eliminar",
+												],
 											}
 										),
 									],
@@ -230,8 +179,4 @@
 			},
 		},
 	];
-
-	const details = (row: any) => {
-		const customer = row.original;
-	};
 </script>

@@ -12,6 +12,20 @@
 			@edit-customer="handleEditCustomer"
 			@delete-customer="handleDeleteCustomer"
 		/>
+		<UiAlertDialog v-model:open="isDeleteDialogOpen">
+			<UiAlertDialogContent>
+				<UiAlertDialogHeader>
+					<UiAlertDialogTitle>Eliminar cliente</UiAlertDialogTitle>
+					<UiAlertDialogDescription>
+						¿Estás seguro de que quieres eliminar este cliente? Esta acción no se puede deshacer.
+					</UiAlertDialogDescription>
+				</UiAlertDialogHeader>
+				<UiAlertDialogFooter>
+					<UiAlertDialogCancel @click="closeDeleteDialog">Cancelar</UiAlertDialogCancel>
+					<UiAlertDialogAction @click="confirmDeleteCustomer">Eliminar</UiAlertDialogAction>
+				</UiAlertDialogFooter>
+			</UiAlertDialogContent>
+		</UiAlertDialog>
 		<FormsParentSheet
 			:title="isEditMode ? 'Editar Cliente' : 'Agregar cliente'"
 			:description="
@@ -69,17 +83,36 @@
 	};
 
 	const customerToDelete = ref<Customer | null>(null);
+	const isDeleteDialogOpen = ref(false);
 
 	const handleDeleteCustomer = (customer: Customer) => {
 		customerToDelete.value = customer;
+		isDeleteDialogOpen.value = true;
 	};
 
-	const deleteCustomer = async () => {
+	const closeDeleteDialog = () => {
+		isDeleteDialogOpen.value = false;
+		customerToDelete.value = null;
+	};
+
+	const confirmDeleteCustomer = async () => {
 		if (!customerToDelete.value) return;
-		await useCustomFetch(`/api/customer/${customerToDelete.value.id}`, {
-			method: "DELETE",
-		});
-		await execute();
+		try {
+			await useCustomFetch(`/api/customer/${customerToDelete.value.id}`, {
+				method: "DELETE",
+			});
+			useSonner.success("Cliente eliminado correctamente", {
+				position: "top-center",
+			});
+			closeDeleteDialog();
+			await execute();
+		} catch (error) {
+			console.log("Error deleting customer:", error);
+			useSonner.error("Error al eliminar el cliente", {
+				description: "No se pudo eliminar el cliente. Inténtalo de nuevo más tarde.",
+				position: "top-center",
+			});
+		}
 	};
 
 	const { data, execute } = useCustomFetch<Customer[]>("/api/customer", {
