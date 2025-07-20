@@ -68,7 +68,17 @@
 		await execute();
 	};
 
-	const handleDeleteCustomer = async () => {
+	const customerToDelete = ref<Customer | null>(null);
+
+	const handleDeleteCustomer = (customer: Customer) => {
+		customerToDelete.value = customer;
+	};
+
+	const deleteCustomer = async () => {
+		if (!customerToDelete.value) return;
+		await useCustomFetch(`/api/customer/${customerToDelete.value.id}`, {
+			method: "DELETE",
+		});
 		await execute();
 	};
 

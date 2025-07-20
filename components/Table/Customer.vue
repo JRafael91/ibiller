@@ -160,19 +160,65 @@
 										),
 										h(resolveComponent("UiDropdownMenuSeparator")),
 										h(
-											resolveComponent("UiDropdownMenuItem"),
+											resolveComponent("UiAlertDialog"),
+											{},
 											{
-												onClick: () => emit("delete-customer", row.original),
-												class: "text-destructive",
-											},
-											{
-												default: () => [
-													h(resolveComponent("Icon"), {
-														name: "lucide:trash",
-														class: "mr-2 h-4 w-4",
-													}),
-													"Eliminar",
-												],
+												trigger: () =>
+													h(
+														resolveComponent("UiDropdownMenuItem"),
+														{
+															class: "text-destructive",
+															onSelect: (e: any) => e.preventDefault(),
+														},
+														{
+															default: () => [
+																h(resolveComponent("Icon"), {
+																	name: "lucide:trash",
+																	class: "mr-2 h-4 w-4",
+																}),
+																"Eliminar",
+															],
+														}
+													),
+												default: () =>
+													h(
+														resolveComponent("UiAlertDialogContent"),
+														{},
+														{
+															default: () => [
+																h(
+																	resolveComponent("UiAlertDialogHeader"),
+																	{},
+																	{
+																		default: () => [
+																			h(resolveComponent("UiAlertDialogTitle"), {}, "Eliminar cliente"),
+																			h(
+																				resolveComponent("UiAlertDialogDescription"),
+																				{},
+																				"¿Estás seguro de que quieres eliminar este cliente? Esta acción no se puede deshacer."
+																			),
+																		],
+																	}
+																),
+																h(
+																	resolveComponent("UiAlertDialogFooter"),
+																	{},
+																	{
+																		default: () => [
+																			h(resolveComponent("UiAlertDialogCancel"), {}, "Cancelar"),
+																			h(
+																				resolveComponent("UiAlertDialogAction"),
+																				{
+																					onClick: () => emit("delete-customer", row.original),
+																				},
+																				"Eliminar"
+																			),
+																		],
+																	}
+																),
+															],
+														}
+													),
 											}
 										),
 									],
